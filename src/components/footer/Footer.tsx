@@ -11,7 +11,7 @@ export function Footer() {
           <span className="text-sm font-medium text-[#111827]">MIT Cab Share</span>
         </div>
         <p className="text-sm text-[#6B7280]">
-          Built by students, for students of MIT Manipal. Not affiliated with the institute.
+          Built by a student, for MIT Manipal students.
         </p>
       </div>
     </footer>

@@ -5,7 +5,7 @@ export function formatRoute(route: Route): string {
 }
 
 export function routeTimeLabel(route: Route): string {
-  return route === "MIT_TO_AIRPORT" ? "Departure Time" : "Flight Arrival Time";
+  return route === "MIT_TO_AIRPORT" ? "Flight Departure Time" : "Flight Arrival Time";
 }
 
 export function formatFare(fare: number): string {
