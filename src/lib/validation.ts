@@ -19,6 +19,10 @@ export const cabFormSchema = z.object({
     .min(10, "Enter a valid 10-digit phone number")
     .max(10, "Enter a valid 10-digit phone number")
     .regex(/^[6-9]\d{9}$/, "Enter a valid Indian mobile number"),
+managePin: z
+  .string()
+  .length(4, "PIN must be exactly 4 digits")
+  .regex(/^\d{4}$/, "PIN must contain only numbers"),
   totalFare: z.coerce
     .number({ message: "Enter a valid fare" })
     .positive("Fare must be greater than 0"),

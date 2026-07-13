@@ -7,12 +7,13 @@ export type SortOrder = "EARLIEST" | "LATEST";
 export interface CabListing {
   id: string;
   route: Route;
-  travelDate: string; // ISO date string (yyyy-MM-dd)
-  time: string; // HH:mm (24h)
+  travelDate: string;
+  time: string;
   peopleAlreadyTraveling: number;
   needMorePeople: number;
   contactNumber: string;
   totalFare: number;
+  managePin: string; // NEW
   createdAt: string;
 }
 
@@ -24,6 +25,7 @@ export interface CabFormValues {
   needMorePeople: number;
   contactNumber: string;
   totalFare: number;
+  managePin: string; // NEW
 }
 
 export interface CabFilters {

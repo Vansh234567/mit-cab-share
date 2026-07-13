@@ -38,6 +38,7 @@ const defaultValues: CabFormInput = {
   peopleAlreadyTraveling: "1",
   needMorePeople: "1",
   contactNumber: "",
+  managePin: "",
   totalFare: "",
 };
 
@@ -170,7 +171,27 @@ export function PostCabDialog({ open, onOpenChange, onSubmitCab }: PostCabDialog
               <p className="text-xs text-red-500">{errors.contactNumber.message}</p>
             )}
           </div>
+<div className="flex flex-col gap-1.5">
+  <Label htmlFor="managePin">Manage Listing PIN</Label>
 
+  <Input
+    id="managePin"
+    type="password"
+    maxLength={4}
+    placeholder="Enter 4-digit PIN"
+    {...register("managePin")}
+  />
+
+  <p className="text-xs text-muted-foreground">
+    You'll need this PIN to edit or delete your listing later.
+  </p>
+
+  {errors.managePin && (
+    <p className="text-xs text-red-500">
+      {errors.managePin.message}
+    </p>
+  )}
+</div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="totalFare">Total Fare (₹)</Label>
             <Input
