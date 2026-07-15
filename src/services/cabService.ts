@@ -120,11 +120,13 @@ export function filterAndSortCabs(
     });
   }
 
-  if (filters.minSeatsNeeded !== "ALL") {
-    result = result.filter(
-      (cab) => cab.needMorePeople >= filters.minSeatsNeeded
-    );
-  }
+ if (filters.minSeatsNeeded !== "ALL") {
+  const minSeats = Number(filters.minSeatsNeeded);
+
+  result = result.filter(
+    (cab) => cab.needMorePeople >= minSeats
+  );
+}
 
   result.sort((a, b) => {
     const aValue =
