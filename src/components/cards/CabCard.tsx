@@ -111,23 +111,15 @@ const [deleteOpen, setDeleteOpen] = useState(false);
 
   </div>
 
-</div>       <VerifyPinDialog
-  open={editOpen}
-  onOpenChange={setEditOpen}
-  correctPin={cab.managePin}
-  title="Verify PIN to Edit"
-  onVerified={() => {
-  onEditCab(cab);
-}}
-/>
+</div>      
 
 <VerifyPinDialog
-  open={editOpen}
-  onOpenChange={setEditOpen}
+  open={deleteOpen}
+  onOpenChange={setDeleteOpen}
   correctPin={cab.managePin}
-  title="Verify PIN to Edit"
-  onVerified={() => {
-    onEditCab(cab);
+  title="Verify PIN to Delete"
+  onVerified={async () => {
+    await deleteCab(cab.id);
   }}
 />
     </motion.div>

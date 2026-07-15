@@ -219,8 +219,7 @@ export function PostCabDialog({
   />
 
   <p className="text-xs text-muted-foreground">
-    You'll need this PIN to edit or delete your listing later.
-  </p>
+You&apos;ll need this PIN to edit or delete your listing later.  </p>
 
   {errors.managePin && (
     <p className="text-xs text-red-500">
