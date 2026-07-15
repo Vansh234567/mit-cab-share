@@ -10,9 +10,15 @@ import { formatDate, formatFare, formatRoute, formatTime, routeTimeLabel } from 
 import { Badge } from "@/components/ui/badge";
 interface CabCardProps {
   cab: CabListing;
+  deleteCab: (id: string) => Promise<void>;
+  onEditCab: (cab: CabListing) => void;
 }
 
-export function CabCard({ cab }: CabCardProps) {
+export function CabCard({
+  cab,
+  deleteCab,
+  onEditCab,
+}: CabCardProps) {
 const [editOpen, setEditOpen] = useState(false);
 const [deleteOpen, setDeleteOpen] = useState(false);
   const farePerPerson = Math.round(
@@ -111,17 +117,17 @@ const [deleteOpen, setDeleteOpen] = useState(false);
   correctPin={cab.managePin}
   title="Verify PIN to Edit"
   onVerified={() => {
-    console.log("Edit Verified");
-  }}
+  onEditCab(cab);
+}}
 />
 
 <VerifyPinDialog
-  open={deleteOpen}
-  onOpenChange={setDeleteOpen}
+  open={editOpen}
+  onOpenChange={setEditOpen}
   correctPin={cab.managePin}
-  title="Verify PIN to Delete"
+  title="Verify PIN to Edit"
   onVerified={() => {
-    console.log("Delete Verified");
+    onEditCab(cab);
   }}
 />
     </motion.div>

@@ -10,10 +10,22 @@ interface CabListingsSectionProps {
   isLoading: boolean;
   filters: CabFilters;
   onFiltersChange: (filters: CabFilters) => void;
+  deleteCab: (id: string) => Promise<void>;
+  onEditCab: (cab: CabListing) => void;
 }
 
 export const CabListingsSection = forwardRef<HTMLDivElement, CabListingsSectionProps>(
-  ({ cabs, isLoading, filters, onFiltersChange }, ref) => {
+ (
+  {
+    cabs,
+    isLoading,
+    filters,
+    onFiltersChange,
+    deleteCab,
+    onEditCab,
+  },
+  ref
+) => {
     return (
       <section ref={ref} className="pb-24">
         <FilterBar filters={filters} onChange={onFiltersChange} />
@@ -26,8 +38,12 @@ export const CabListingsSection = forwardRef<HTMLDivElement, CabListingsSectionP
               </span>
             )}
           </div>
-          <CabGrid cabs={cabs} isLoading={isLoading} />
-        </div>
+<CabGrid
+  cabs={cabs}
+  isLoading={isLoading}
+  deleteCab={deleteCab}
+  onEditCab={onEditCab}
+/>      </div>
       </section>
     );
   }

@@ -22,15 +22,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cabFormSchema, type CabFormInput, type CabFormOutput } from "@/lib/validation";
-import { CabFormValues, Route } from "@/types";
+import { CabFormValues, Route, CabListing } from "@/types";
 import { routeTimeLabel } from "@/utils/format";
-
 interface PostCabDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmitCab: (values: CabFormValues) => void;
+  onSubmitCab: (values: CabFormValues) => Promise<void>;
+  onUpdateCab: (
+    id: string,
+    values: CabFormValues
+  ) => Promise<void>;
+  editingCab: CabListing | null;
 }
-
 const defaultValues: CabFormInput = {
   route: "MIT_TO_AIRPORT",
   travelDate: "",
@@ -42,7 +45,13 @@ const defaultValues: CabFormInput = {
   totalFare: "",
 };
 
-export function PostCabDialog({ open, onOpenChange, onSubmitCab }: PostCabDialogProps) {
+export function PostCabDialog({
+  open,
+  onOpenChange,
+  onSubmitCab,
+  onUpdateCab,
+  editingCab,
+}: PostCabDialogProps) {
   const {
     register,
     handleSubmit,
@@ -57,19 +66,46 @@ export function PostCabDialog({ open, onOpenChange, onSubmitCab }: PostCabDialog
 
   const route = watch("route") as Route;
 
-  useEffect(() => {
-    if (!open) {
-      reset(defaultValues);
-    }
-  }, [open, reset]);
+ useEffect(() => {
+  if (!open) {
+    reset(defaultValues);
+    return;
+  }
 
-  const onSubmit = (values: CabFormOutput) => {
-    onSubmitCab(values);
-    toast.success("Your cab has been posted!", {
-      description: "Other students can now see and contact you.",
+  if (editingCab) {
+    reset({
+      route: editingCab.route,
+      travelDate: editingCab.travelDate,
+      time: editingCab.time,
+      peopleAlreadyTraveling:
+        editingCab.peopleAlreadyTraveling.toString(),
+      needMorePeople:
+        editingCab.needMorePeople.toString(),
+      contactNumber: editingCab.contactNumber,
+      managePin: editingCab.managePin,
+      totalFare: editingCab.totalFare.toString(),
     });
+  }
+}, [open, editingCab, reset]);
+
+  const onSubmit = async (values: CabFormOutput) => {
+  try {
+    if (editingCab) {
+      await onUpdateCab(editingCab.id, values);
+
+      toast.success("Cab updated successfully!");
+    } else {
+      await onSubmitCab(values);
+
+      toast.success("Your cab has been posted!");
+    }
+
     onOpenChange(false);
-  };
+  } catch (err) {
+    console.error(err);
+    toast.error("Something went wrong.");
+  }
+};
 
   const todayStr = new Date().toISOString().split("T")[0];
 
@@ -207,8 +243,13 @@ export function PostCabDialog({ open, onOpenChange, onSubmitCab }: PostCabDialog
           </div>
 
           <Button type="submit" size="lg" disabled={isSubmitting} className="mt-2">
-            {isSubmitting ? "Posting..." : "Post Cab"}
-          </Button>
+{isSubmitting
+  ? editingCab
+    ? "Saving..."
+    : "Posting..."
+  : editingCab
+    ? "Save Changes"
+    : "Post Cab"}          </Button>
         </form>
       </DialogContent>
     </Dialog>

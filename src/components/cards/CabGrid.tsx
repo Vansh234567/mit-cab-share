@@ -9,9 +9,16 @@ import { EmptyState } from "@/components/common/EmptyState";
 interface CabGridProps {
   cabs: CabListing[];
   isLoading: boolean;
+  deleteCab: (id: string) => Promise<void>;
+  onEditCab: (cab: CabListing) => void;
 }
 
-export function CabGrid({ cabs, isLoading }: CabGridProps) {
+export function CabGrid({
+  cabs,
+  isLoading,
+  deleteCab,
+  onEditCab,
+}: CabGridProps) {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -30,7 +37,12 @@ export function CabGrid({ cabs, isLoading }: CabGridProps) {
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
       <AnimatePresence mode="popLayout">
         {cabs.map((cab) => (
-          <CabCard key={cab.id} cab={cab} />
+         <CabCard
+  key={cab.id}
+  cab={cab}
+  deleteCab={deleteCab}
+  onEditCab={onEditCab}
+/>
         ))}
       </AnimatePresence>
     </div>
