@@ -1,13 +1,31 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
-import { VerifyPinDialog } from "@/components/dialogs/VerifyPinDialog";
+
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Calendar, Clock, Phone, Users, Wallet, ArrowRight } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  Phone,
+  Users,
+  Wallet,
+  ArrowRight,
+  Pencil,
+  Trash2,
+} from "lucide-react";
+
 import { CabListing } from "@/types";
-import { formatDate, formatFare, formatRoute, formatTime, routeTimeLabel } from "@/utils/format";
+import {
+  formatDate,
+  formatFare,
+  formatRoute,
+  formatTime,
+  routeTimeLabel,
+} from "@/utils/format";
+
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { VerifyPinDialog } from "@/components/dialogs/VerifyPinDialog";
+
 interface CabCardProps {
   cab: CabListing;
   deleteCab: (id: string) => Promise<void>;
@@ -19,10 +37,12 @@ export function CabCard({
   deleteCab,
   onEditCab,
 }: CabCardProps) {
-const [editOpen, setEditOpen] = useState(false);
-const [deleteOpen, setDeleteOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
   const farePerPerson = Math.round(
-    cab.totalFare / (cab.peopleAlreadyTraveling + cab.needMorePeople)
+    cab.totalFare /
+      (cab.peopleAlreadyTraveling + cab.needMorePeople)
   );
 
   return (
@@ -41,7 +61,11 @@ const [deleteOpen, setDeleteOpen] = useState(false);
           <ArrowRight className="h-4 w-4 text-[#6B7280]" />
           <span>{formatRoute(cab.route).split(" → ")[1]}</span>
         </div>
-        <Badge>{cab.needMorePeople} seat{cab.needMorePeople === 1 ? "" : "s"} needed</Badge>
+
+        <Badge>
+          {cab.needMorePeople} seat
+          {cab.needMorePeople === 1 ? "" : "s"} needed
+        </Badge>
       </div>
 
       <div className="grid grid-cols-2 gap-3 text-sm text-[#6B7280]">
@@ -49,79 +73,88 @@ const [deleteOpen, setDeleteOpen] = useState(false);
           <Calendar className="h-4 w-4 text-[#2563EB]" />
           <span>{formatDate(cab.travelDate)}</span>
         </div>
+
         <div className="flex items-center gap-2">
           <Clock className="h-4 w-4 text-[#2563EB]" />
           <span>{formatTime(cab.time)}</span>
         </div>
+
         <div className="flex items-center gap-2">
           <Users className="h-4 w-4 text-[#2563EB]" />
           <span>{cab.peopleAlreadyTraveling} already traveling</span>
         </div>
+
         <div className="flex items-center gap-2">
           <Wallet className="h-4 w-4 text-[#2563EB]" />
           <span>{formatFare(cab.totalFare)} total</span>
         </div>
       </div>
 
-      <p className="text-xs text-[#9CA3AF]">{routeTimeLabel(cab.route)}</p>
-
-<div className="border-t border-[#E5E7EB] pt-4">
-
-  <div className="flex items-center justify-between">
-
-    <div>
-      <p className="text-xs text-[#6B7280]">
-        Approx. per person
+      <p className="text-xs text-[#9CA3AF]">
+        {routeTimeLabel(cab.route)}
       </p>
 
-      <p className="text-lg font-semibold text-[#111827]">
-        {formatFare(farePerPerson)}
-      </p>
-    </div>
+      <div className="border-t border-[#E5E7EB] pt-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs text-[#6B7280]">
+              Approx. per person
+            </p>
 
-    <a
-      href={`tel:${cab.contactNumber}`}
-      className="flex items-center gap-2 rounded-xl bg-[#F3F4F6] px-4 py-2 text-sm font-medium text-[#111827] transition-colors hover:bg-[#E5E7EB]"
-    >
-      <Phone className="h-4 w-4" />
-      {cab.contactNumber}
-    </a>
+            <p className="text-lg font-semibold text-[#111827]">
+              {formatFare(farePerPerson)}
+            </p>
+          </div>
 
-  </div>
+          <a
+            href={`tel:${cab.contactNumber}`}
+            className="flex items-center gap-2 rounded-xl bg-[#F3F4F6] px-4 py-2 text-sm font-medium text-[#111827] transition-colors hover:bg-[#E5E7EB]"
+          >
+            <Phone className="h-4 w-4" />
+            {cab.contactNumber}
+          </a>
+        </div>
 
-  <div className="mt-4 flex gap-2">
+        <div className="mt-4 flex gap-2">
+          <Button
+            variant="outline"
+            className="flex-1"
+            onClick={() => setEditOpen(true)}
+          >
+            <Pencil className="mr-2 h-4 w-4" />
+            Edit
+          </Button>
 
-    <Button
-      variant="outline"
-      className="flex-1"
-      onClick={() => setEditOpen(true)}
-    >
-      <Pencil className="mr-2 h-4 w-4" />
-      Edit
-    </Button>
+          <Button
+            variant="outline"
+            className="flex-1 border-red-300 text-red-600 hover:bg-red-50"
+            onClick={() => setDeleteOpen(true)}
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            Delete
+          </Button>
+        </div>
+      </div>
 
-    <Button
-      variant="destructive"
-      className="flex-1"
-      onClick={() => setDeleteOpen(true)}
-    >
-      <Trash2 className="mr-2 h-4 w-4" />
-      Delete
-    </Button>
+      <VerifyPinDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        correctPin={cab.managePin}
+        title="Verify PIN to Edit"
+        onVerified={() => {
+          onEditCab(cab);
+        }}
+      />
 
-  </div>
-
-</div>      
-
-<VerifyPinDialog
-  open={deleteOpen}
-  onOpenChange={setDeleteOpen}
-  correctPin={cab.managePin}
-  title="Verify PIN to Delete"
-  onVerified={async () => {
-    await deleteCab(cab.id);
-  }}
-/>
+      <VerifyPinDialog
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        correctPin={cab.managePin}
+        title="Verify PIN to Delete"
+        onVerified={async () => {
+          await deleteCab(cab.id);
+        }}
+      />
     </motion.div>
   );
 }
